@@ -419,3 +419,25 @@ extension MentionListener: UITextViewDelegate {
         return delegate?.textViewShouldEndEditing?(textView) ?? true
     }
 }
+
+public extension MentionListener {
+    func formatTextViewText(_ format: MentionFormatClosure) -> String {
+        var text = mentionsTextView.text ?? ""
+        mentionsTextView.text = ""
+        while !mentions.isEmpty {
+            if let mention = mentions.first, let newRange = Range(mention.range, in: text) {
+                let formatString = format(mention.object)
+
+                text = text.replacingCharacters(in: newRange, with: formatString)
+                mentions = mentions |> remove([mention])
+                mentions = mentions |> adjusted(forTextChangeAt: mention.range, text: formatString)
+            } else {
+                mentions = []
+            }
+        }
+        reset()
+        return text
+    }
+}
+
+public typealias MentionFormatClosure = (CreateMention) -> String
