@@ -64,7 +64,7 @@ class ExampleAccessoryView: UIView {
         textView.text = "Test Steven Zweier mention"
 
         let mention = ExampleMention(name: "Steven Zweier")
-        mentionsListener.insertExistingMentions([(mention, NSRange(location: 5, length: 13))])
+        mentionsListener.insertExistingMentions([(mention, NSRange(location: 5, length: mention.name.count))])
 
         dataManager = ExampleMentionsTableViewDataManager(
             mentionTableView: mentionsTableView,

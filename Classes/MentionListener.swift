@@ -9,6 +9,9 @@
 import UIKit
 
 public class MentionListener: NSObject {
+    
+    public var maximumLimit = 200
+    
     /**
      @brief Array list of mentions managed by listener, accessible via the
      public mentions property.
@@ -188,6 +191,14 @@ extension MentionListener /* Public */ {
      @return Bool: Whether or not a mention was added
      */
     @discardableResult public func addMention(_ createMention: CreateMention) -> Bool {
+        
+        let mentionRange = currentMentionRange.adjustLength(for: createMention.name)
+        let length = mentionRange.location + mentionRange.length
+        guard length <= maximumLimit else {
+            hideMentions()
+            return false
+        }
+    
         guard currentMentionRange.location != NSNotFound else { return false }
 
         mentions = mentions

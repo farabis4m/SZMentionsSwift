@@ -21,7 +21,7 @@ class ExampleMentionsTableViewDataManager: NSObject {
     }()
 
     private var mentionsList: [ExampleMention] {
-        guard !mentions.isEmpty, filterString != "" else { return mentions }
+        if filterString == "" { return mentions  }
         return mentions.filter {
             $0.name.lowercased().contains(filterString.lowercased())
         }
@@ -41,8 +41,11 @@ class ExampleMentionsTableViewDataManager: NSObject {
     }
 
     func filter(_ string: String) {
-        filterString = string
-        tableView.reloadData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.33) {
+            self.filterString = string
+            print("Filter string", self.filterString)
+            self.tableView.reloadData()
+        }
     }
 }
 
